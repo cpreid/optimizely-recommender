@@ -55,6 +55,9 @@ RecService.addRecommender({Object} config)
 | name       | string | The name of the recommender used for. Useful when using `run`. See below | no      |     config.id    |
 | target       | string | An ID that provide context for algorithms require id [cobrowse, cobuy]  | conditional, see below   |     undefined    |
 
+* *cobuy and recent are not yet supported*
+* target is only required for cobrowse and cobuy. The target should be equal to the record ID that you want to use as context, e.g., show co-browsed recommendations where users that browsed a specific item (target) also browsed other items
+
 ---
 
 ### run
