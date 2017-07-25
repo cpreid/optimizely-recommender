@@ -33,3 +33,26 @@ RecService.init({Object} config)
 | serviceId       | integer | The recommender service ID configured in Optimizely | yes      |     undefined    |
 | log      | boolean  | Will log debug messages to the console                      | no      |    false    |
 
+---
+
+> Add a recommender that will be queried
+
+``` RecService.addRecommender({serviceId: 123456789, log: true})```
+
+### init
+Returns a ```RecService``` instance
+```
+RecService.addRecommender({Object} config)
+```
+
+##### config parameters:
+
+| parameter | type   | details                                            | required | default |
+|-----------|--------|----------------------------------------------------|----------|---------|
+| id       | integer | The recommender ID configured in Optimizely | yes      |     undefined    |
+| type       | string | The type of fetcher that will be used [cobrowse, popular, user, recent, cobuy] | yes      |     undefined    |
+| max       | integer | The maximum number of rec items to be fetched | no      |     20    |
+| name       | string | The name of the recommender used for. Useful when using `run`. See below | no      |     config.id    |
+| target       | string | An ID that provide context for algorithms require id [cobrowse, cobuy]  | conditional, see below   |     undefined    |
+
+
