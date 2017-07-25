@@ -21,10 +21,10 @@ E.g. - Attempt to display 15 total recommendations // Load 10 Co-browse recommen
 ``` RecService.init({serviceId: 123456789, log: true})```
 
 ### init
-```
-.find({Object} config)
-```
 Returns a ```RecService``` instance
+```
+RecService.init({Object} config)
+```
 
 ##### config parameters:
 
