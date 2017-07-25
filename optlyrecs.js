@@ -49,6 +49,9 @@ var RecService = (function() {
     this.recommenders = [];    
 
     this.addRecommender = function(config) {
+      config.prefilter    = config.prefilter || fetcherConfig.prefilter;
+      config.postfilter   = config.postfilter || fetcherConfig.postfilter;
+      config.canonicalize = config.canonicalize || fetcherConfig.canonicalize;      
       this.recommenders.push(new Recommender({
         recommenderServiceId: fetcherConfig.serviceId,
         recommenderId: config.id
