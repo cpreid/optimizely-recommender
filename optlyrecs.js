@@ -44,7 +44,7 @@ var RecService = (function() {
 
     var logger = (function() {
       if(fetcherConfig.log) return console;
-      return {log: function() {}, group: function() {}, groupEnd: function() {}, groupCollapsed: function() {}};
+      return {log: function() {}, group: function() {}, groupEnd: function() {}, groupCollapsed: function() {}, dir: function() {}};
     })();
 
     this.recommenders = [];    
