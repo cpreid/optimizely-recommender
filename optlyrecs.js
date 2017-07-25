@@ -18,6 +18,7 @@ var RecService = (function() {
           return optlyUtils.visitor.visitorId;
       }
     }
+
     this.run = function() {
       var fetcher = optlyUtils.recommender.getRecommendationsFetcher(serviceKeys, getTarget(), {
         preFilter: config.prefilter,
@@ -49,19 +50,23 @@ var RecService = (function() {
     this.recommenders = [];    
 
     this.addRecommender = function(config) {
+      // filters added here will override global filters added via `init`
       config.prefilter    = config.prefilter || fetcherConfig.prefilter;
       config.postfilter   = config.postfilter || fetcherConfig.postfilter;
-      config.canonicalize = config.canonicalize || fetcherConfig.canonicalize;      
+      config.canonicalize = config.canonicalize || fetcherConfig.canonicalize; 
+
       this.recommenders.push(new Recommender({
         recommenderServiceId: fetcherConfig.serviceId,
         recommenderId: config.id
       }, config));
       return this;
     }    
+
     this.execAll = function() {
       var fetchPromises = this.recommenders.map(function(r) { return r.run(); });
       return Promise.all(fetchPromises);
     }
+
     this.run = function() {
       var returnMap = {};
       return this.execAll().then(function(recResultsObjs) {
@@ -79,6 +84,7 @@ var RecService = (function() {
         return returnMap;
       });
     }
+
     this.merge = function(config) {
       config = config || {};
       var fetchPromises = this.recommenders.map(function(r) {
