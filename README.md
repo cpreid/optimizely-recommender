@@ -39,7 +39,7 @@ RecService.init({Object} config)
 
 ``` RecService.addRecommender({serviceId: 123456789, log: true})```
 
-### init
+### addRecommender
 Returns a ```RecService``` instance
 ```
 RecService.addRecommender({Object} config)
@@ -55,4 +55,31 @@ RecService.addRecommender({Object} config)
 | name       | string | The name of the recommender used for. Useful when using `run`. See below | no      |     config.id    |
 | target       | string | An ID that provide context for algorithms require id [cobrowse, cobuy]  | conditional, see below   |     undefined    |
 
+---
 
+### run
+> Fetch the recommendations for each recommender
+Returns a ```Promise``` that results to an Object literal mapping recommender.name (or IDs) to their resultset
+```
+instance.run()
+```
+
+##### config parameters:
+
+None
+
+---
+
+### merge
+> Fetch the recommendations for each recommender, merge into a single array
+
+Returns a ```Promise``` that results to an Object literal mapping recommender.name (or IDs) to their resultset
+```
+instance.merge({Object} config)
+```
+
+##### config parameters:
+
+| parameter | type   | details                                            | required | default |
+|-----------|--------|----------------------------------------------------|----------|---------|
+| max       | integer | The maximum number of rec items in the result array. The result array will be a coalescence of each recommender's results, prioritized by the order in which ```addRecommender``` was called | no      |     undefined    |
