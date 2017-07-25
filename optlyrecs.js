@@ -87,10 +87,7 @@ var RecService = (function() {
 
     this.merge = function(config) {
       config = config || {};
-      var fetchPromises = this.recommenders.map(function(r) {
-          return r.run();
-        }),
-        results = [];
+      var results = [];
       return this.execAll().then(function(recResultsObjs) {
         logger.groupCollapsed('RECOMMENDATIONS');
         recResultsObjs.forEach(function(recObj) {
