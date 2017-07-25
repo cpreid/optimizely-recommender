@@ -32,6 +32,11 @@ RecService.init({Object} config)
 |-----------|--------|----------------------------------------------------|----------|---------|
 | serviceId       | integer | The recommender service ID configured in Optimizely | yes      |     undefined    |
 | log      | boolean  | Will log debug messages to the console                      | no      |    false    |
+| prefilter      | function  | Filter out recommendations, must return a boolean                      | no      |    undefined    |
+| postfilter      | boolean  | Filter out recommendations, must return a boolean                      | no      |    undefined    |
+| canonicalize      | boolean  | Format the metadata associated each recommendation                      | no      |    undefined    |
+
+* *The prefilter, postfiler and canonicalize functions will be applied globally across all recommenders added via ```addRecommender```*
 
 ---
 
@@ -54,9 +59,13 @@ RecService.addRecommender({Object} config)
 | max       | integer | The maximum number of rec items to be fetched | no      |     20    |
 | name       | string | The name of the recommender used for. Useful when using `run`. See below | no      |     config.id    |
 | target       | string | An ID that provide context for algorithms require id [cobrowse, cobuy]  | conditional, see below   |     undefined    |
+| prefilter      | function  | Filter out recommendations, must return a boolean                      | no      |    undefined    |
+| postfilter      | boolean  | Filter out recommendations, must return a boolean                      | no      |    undefined    |
+| canonicalize      | boolean  | Format the metadata associated each recommendation                      | no      |    undefined    |
 
 * *cobuy and recent are not yet supported*
 * target is only required for cobrowse and cobuy. The target should be equal to the record ID that you want to use as context, e.g., show co-browsed recommendations where users that browsed a specific item (target) also browsed other items
+* *The prefilter, postfiler and canonicalize functions will override any functions added via ```init```*
 
 ---
 
