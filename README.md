@@ -59,7 +59,7 @@ RecService.addRecommender({Object} config)
 
 ### run
 > Fetch the recommendations for each recommender
-Returns a ```Promise``` that results to an Object literal mapping recommender.name (or IDs) to their resultset
+Returns a ```Promise``` that resolves to an Object literal mapping recommender.name (or IDs) to their resultset
 ```
 instance.run()
 ```
@@ -73,7 +73,7 @@ None
 ### merge
 > Fetch the recommendations for each recommender, merge into a single array
 
-Returns a ```Promise``` that results to an Object literal mapping recommender.name (or IDs) to their resultset
+Returns a ```Promise``` that resolves to a single array of recommendations
 ```
 instance.merge({Object} config)
 ```
