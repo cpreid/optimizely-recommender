@@ -73,7 +73,7 @@ None
 ### merge
 > Fetch the recommendations for each recommender, merge into a single array
 
-Returns a ```Promise``` that resolves to a single array of recommendations
+Returns a ```Promise``` that resolves to a single array of recommendation objects
 ```
 instance.merge({Object} config)
 ```
