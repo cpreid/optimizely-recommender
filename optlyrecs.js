@@ -1,9 +1,6 @@
 var RecService = (function() {
 
-  var optlyUtils = {
-    'recommender': optimizely.get('recommender'),
-    'visitor': optimizely.get('visitor')
-  }
+  var optlyUtils = {}; // attach optimizely modules upon `init`, only as needed
 
   var Recommender = function(serviceKeys, config) {
     var recommenderName = config.name || config.id;
@@ -111,6 +108,8 @@ var RecService = (function() {
 
   return {
     init: function(config) {
+      optlyUtils.recommender = optlyUtils.recommender || optimizely.get('recommender');
+      optlyUtils.visitor     = optlyUtils.visitor     || optimizely.get('visitor');
       return new Fetcher(config);
     }
   }
