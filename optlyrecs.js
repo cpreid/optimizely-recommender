@@ -2,6 +2,23 @@ var RecService = (function() {
 
   var optlyUtils = {}; // attach optimizely modules upon `init`, only as needed
 
+  var Datasource = function(fetcherFnc, idx) {    
+    this.run = function() {
+      return fetcherFnc().then(function(recs) {
+        recs.forEach(function(rec) {
+          rec['__optlyMeta__'] = {
+            'rec_type': 'datasource',
+            'rec_name': 'custom_datasource_' + idx
+          };
+        });
+        return {
+          'recs': recs,
+          'name': 'custom_datasource_' + idx
+        };
+      });
+    }
+  }
+
   var Recommender = function(serviceKeys, config) {
     var recommenderName = config.name || config.id;
 
@@ -44,8 +61,9 @@ var RecService = (function() {
       return {log: function() {}, group: function() {}, groupEnd: function() {}, groupCollapsed: function() {}, dir: function() {}};
     })();
     
-    this.logger = logger;
-    this.recommenders = [];    
+    this.logger       = logger;
+    this.recommenders = []; 
+    this.datasources  = []; 
 
     this.addRecommender = function(config) {
       // filters added here will override global filters added via `init`
@@ -60,9 +78,16 @@ var RecService = (function() {
       return this;
     }    
 
+    this.addDatasource = function(fetcherFnc) {
+      this.datasources.push(new Datasource(fetcherFnc, this.datasources.length + 1));
+      return this;
+    }
+
     this.execAll = function() {
-      var fetchPromises = this.recommenders.map(function(r) { return r.run(); });
-      return Promise.all(fetchPromises);
+      var recommenderPromises = this.recommenders.map(function(r) { return r.run(); }),
+          datasourcePromises  = this.datasources.map(function(r) { return r.run(); }),
+          allFetchPromises = recommenderPromises.concat(datasourcePromises);
+      return Promise.all(allFetchPromises);
     }
 
     this.run = function() {
