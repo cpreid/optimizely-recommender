@@ -7,19 +7,7 @@ E.g. - Attempt to display 15 total recommendations // Load 10 Co-browse recommen
  RecService.init({serviceId: 12345678910, log: true})
   .addRecommender({max: 10, id: 12345612345, type: 'cobrowse', target:'PID_2345345'})    
   .addRecommender({max: 15, id: 12345654321, type: 'popular'})    
-  .addDatasource(function() {
-      var xhr = new XMLHttpRequest;
-      xhr.open('GET', 'https://some-rest-endpoint.com/?q=keyword');
-      xhr.send();
-      return new Promise(function(resolve, reject) {
-        xhr.onload = function() {
-          resolve(JSON.parse(this.responseText).data || []);
-        };
-        xhr.onerror = function() {
-          reject('XHR failed');
-        };
-      });     
-   })
+  .addDatasource(fetchFromAPI)
   .run({max: 15})
   .then(function(recs) {
     console.log(recs);
@@ -89,8 +77,37 @@ RecService.addRecommender({Object} config)
 ### addDatasource
 Returns a ```RecService``` instance
 ```
-RecService.addDatasource({Function} functionThatReturnsAPromise)
+RecService.addDatasource({Function} customFetchFcn)
 ```
+
+| parameter | type   | details                                            | required | default |
+|-----------|--------|----------------------------------------------------|----------|---------|
+| customFetchFcn       | function | Function that returns a `Promise`. This would typically be a Promise that wraps an XHR request that fetches JSON data from some REST endpoint. | yes      |     undefined    |
+
+*example*
+```
+ RecService.init({serviceId: 12345678910, log: true})
+  .addRecommender({max: 15, id: 12345654321, type: 'popular'})    
+  .addDatasource(function() {
+      var xhr = new XMLHttpRequest;
+      xhr.open('GET', 'https://some-rest-endpoint.com/?q=keyword');
+      xhr.send();
+      return new Promise(function(resolve, reject) {
+        xhr.onload = function() {
+          resolve(JSON.parse(this.responseText).data || []);
+        };
+        xhr.onerror = function() {
+          reject('XHR failed');
+        };
+      });     
+   })
+  .run({max: 15})
+  .then(function(recs) {
+    console.log(recs);
+    // render the recs in the extension/webpage
+  });
+```
+
 ---
 
 ### run
