@@ -72,14 +72,14 @@ RecService.addRecommender({Object} config)
 *example* 
 
 ``` RecService.addRecommender({serviceId: 123456789, log: true})```
+
 ---
 
+### addDatasource
 > Add an external datasource (typically, a rest api)
 
-``` RecService.addDatasource(functionThatReturnsAPromise)```
-
-### addDatasource
 Returns a ```RecService``` instance
+
 ```
 RecService.addDatasource({Function} customFetchFcn)
 ```
