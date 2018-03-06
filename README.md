@@ -17,11 +17,9 @@ E.g. - Attempt to display 15 total recommendations // Load 10 Co-browse recommen
 
 ---
 
+### init
 > Create a new Recommender Service
 
-``` RecService.init({serviceId: 123456789, log: true})```
-
-### init
 Returns a ```RecService``` instance
 ```
 RecService.init({Object} config)
@@ -39,14 +37,17 @@ RecService.init({Object} config)
 
 * *The prefilter, postfiler and canonicalize functions will be applied globally across all recommenders added via ```addRecommender```*
 
+*example*
+
+``` RecService.init({serviceId: 123456789, log: true})```
+
 ---
 
+### addRecommender
 > Add a recommender that will be queried
 
-``` RecService.addRecommender({serviceId: 123456789, log: true})```
-
-### addRecommender
 Returns a ```RecService``` instance
+
 ```
 RecService.addRecommender({Object} config)
 ```
@@ -68,6 +69,9 @@ RecService.addRecommender({Object} config)
 * target is only required for cobrowse and cobuy. The target should be equal to the record ID that you want to use as context, e.g., show co-browsed recommendations where users that browsed a specific item (target) also browsed other items
 * *The prefilter, postfiler and canonicalize functions will override any functions added via ```init```*
 
+*example* 
+
+``` RecService.addRecommender({serviceId: 123456789, log: true})```
 ---
 
 > Add an external datasource (typically, a rest api)
