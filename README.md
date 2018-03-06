@@ -69,6 +69,17 @@ RecService.addRecommender({Object} config)
 
 ---
 
+> Add an external datasource (typically, a rest api)
+
+``` RecService.addDatasource(functionThatReturnsAPromise)```
+
+### addDatasource
+Returns a ```RecService``` instance
+```
+RecService.addDatasource({Function} functionThatReturnsAPromise)
+```
+---
+
 ### run
 > Fetch the recommendations for each recommender
 Returns a ```Promise``` that resolves to an Object literal mapping recommender.name (or IDs) to their resultset
