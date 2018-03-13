@@ -17,6 +17,45 @@ E.g. - Attempt to display 15 total recommendations // Load 10 Co-browse recommen
 
 ---
 
+## Deployment
+
+* Add the minified source code to Project JS
+* Register the module as a custom Optimizely module
+* From within the Extension `ApplyJS` code, fetch the module and use the API
+
+*Project JavaScript*
+```
+// make sure optimizely global is defined
+window.optimizely = window.optimizely || [];
+
+// include code
+var RecService=function(){ /* minified code */ }();
+
+// register as optimizely module
+window.optimizely.push({
+  type: "registerModule",
+  moduleName: "recservice",
+  module: RecService
+});
+```
+
+*Extention ApplyJS Code*
+```
+// define local variable for RecService
+var RecService = window.optimizely.get("custom/recservice");
+
+// Use RecService API
+RecService.init({serviceId: 12345678910, log: true})
+ .addRecommender({max: 15, id: 12345654321, type: 'popular'}) 
+ .run()
+ .then(function(recs) {
+    // handle recs
+ });
+```
+
+## API Methods
+
+
 ### init
 > Create a new Recommender Service
 
