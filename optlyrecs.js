@@ -1,27 +1,40 @@
 var RecService = (function() {
 
-  var optlyUtils = {}; // attach optimizely modules upon `init`, only as needed
+  // attach optimizely modules upon `init`, only as needed
+  var optlyUtils = {}; 
 
-  var Datasource = function(fetcherFnc, idx) {    
-    this.run = function() {
-      return fetcherFnc().then(function(recs) {
-        recs.forEach(function(rec) {
-          rec['__optlyMeta__'] = {
-            'rec_type': 'datasource',
-            'rec_name': 'custom_datasource_' + idx
-          };
-        });
-        return {
-          'recs': recs,
-          'name': 'custom_datasource_' + idx
+  var Datasource = function() {
+    this.name = 'default';
+    this.type = 'default';
+    // enrich dataset with additional metadata
+    this.normalizeReults = function(recs) {      
+      recs.forEach(function(rec) {
+        rec['__optlyMeta__'] = {
+          'rec_type': this.type,
+          'rec_name': this.name
         };
       });
-    }
+      return {
+        'recs': recs,
+        'name': this.name
+      };
+    }.bind(this);
   }
 
-  var Recommender = function(serviceKeys, config) {
-    var recommenderName = config.name || config.id;
+  var CustomDatasource = function(fetcherFnc, idx) {   
+    Datasource.call(this);     
+    this.name = 'custom_datasource_' + idx;  
+    this.type = 'custom_datasource';
+    this.run = function() {
+      return fetcherFnc().then(this.normalizeReults);
+    }
+  }  
 
+  var Recommender = function(serviceKeys, config) {    
+    Datasource.call(this);
+    this.name = config.name || config.id;
+    this.type = config.type;
+    
     var getTarget = function() {
       switch (config.type) {
         case 'popular':
@@ -39,18 +52,7 @@ var RecService = (function() {
         canonicalize: config.canonicalize,
         postFilter: config.postfilter
       });
-      return fetcher.next(config.max || 10).then(function(recs) {
-        recs.forEach(function(rec) {
-          rec['__optlyMeta__'] = {
-            'rec_type': config.type,
-            'rec_name': recommenderName
-          };
-        });
-        return {
-          'recs': recs,
-          'name': recommenderName
-        };
-      });
+      return fetcher.next(config.max || 10).then(this.normalizeReults);
     }
   }
 
@@ -79,7 +81,7 @@ var RecService = (function() {
     }    
 
     this.addDatasource = function(fetcherFnc) {
-      this.datasources.push(new Datasource(fetcherFnc, this.datasources.length + 1));
+      this.datasources.push(new CustomDatasource(fetcherFnc, this.datasources.length + 1));
       return this;
     }
 
@@ -96,11 +98,14 @@ var RecService = (function() {
         logger.groupCollapsed('RECOMMENDATIONS');
         recResultsObjs.forEach(function(recResultsInstance) {
           returnMap[recResultsInstance.name] = recResultsInstance.recs;
-        });                
-        for (var r in returnMap) {
-          logger.groupCollapsed('Recommender "' + r + '" (' + returnMap[r].length + ')');
-          logger.dir(returnMap[r]);
-          logger.groupEnd();
+        });
+        if(fetcherConfig.log) {
+           // only loop over results if the logger is on
+          for (var r in returnMap) {
+            logger.groupCollapsed('Recommender "' + r + '" (' + returnMap[r].length + ')');
+            logger.dir(returnMap[r]);
+            logger.groupEnd();
+          }
         }
         logger.log('[Run] ', returnMap);
         logger.groupEnd();
