@@ -3,7 +3,7 @@
 > Wrapper for Optimizely recommendation API
 
 E.g. - Attempt to display 15 total recommendations // Load 10 Co-browse recommendations as primary // Backfill with popular recommendations
-```
+```javascript
  RecService.init({serviceId: 12345678910, log: true})
   .addRecommender({max: 10, id: 12345612345, type: 'cobrowse', target:'PID_2345345'})    
   .addRecommender({max: 15, id: 12345654321, type: 'popular'})    
@@ -24,7 +24,7 @@ E.g. - Attempt to display 15 total recommendations // Load 10 Co-browse recommen
 * From within the Extension `ApplyJS` code, fetch the module and use the API
 
 *Project JavaScript*
-```
+```javascript
 // make sure optimizely global is defined
 window.optimizely = window.optimizely || [];
 
@@ -40,7 +40,7 @@ window.optimizely.push({
 ```
 
 *Extention ApplyJS Code*
-```
+```javascript
 // define local variable for RecService
 var RecService = window.optimizely.get("custom/recservice");
 
@@ -128,7 +128,7 @@ RecService.addDatasource({Function} customFetchFcn)
 | customFetchFcn       | function | Function that returns a `Promise`. This would typically be a Promise that wraps an XHR request that fetches JSON data from some REST endpoint. | yes      |     undefined    |
 
 *example*
-```
+```javascript
  RecService.init({serviceId: 12345678910, log: true})
   .addRecommender({max: 15, id: 12345654321, type: 'popular'})    
   .addDatasource(function() {
